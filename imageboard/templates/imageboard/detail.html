@@ -1,0 +1,39 @@
+{% extends "imageboard/base.html" %}
+{% load thumbnail %}
+
+{% block title %}{{ post.title }}{% endblock %}
+{% block body %}
+    <div class="content">
+        <div class="content-post">
+            <img class="post-image" src="{{ post.img.url }}" alt="{{ post.title }}">
+            <h1>{{ post.title }}</h1>
+            <p>{{ post.text }}</p>
+            <p class="author">Posteado por {{ post.author }} | {{ post.date }}</p>
+        </div>
+        <div class="content-comments">
+            {% if request.user.is_authenticated %}
+                <form method="POST" action="{% url 'comment_submit_url' %}" enctype="multipart/form-data" class="comment-form">
+                    <h1>Posteá un comentario</h1>
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <div>
+                        <button type="submit" class="button">Postear</button>
+                    </div>
+                </form>
+            {% endif %}
+            {% for comment in comments %}
+                <div class="content-comment">
+                    <div class="comment-info">
+                        <p>{{ comment.author }}</p>
+                        <p> {{ comment.date }} </p>
+                    </div>
+                        <div class="comment-text">
+                            <p>{{ comment.text }}</p>
+                        </div>
+                </div>
+            {% empty %}
+                <h1>Todavía no hay comentarios</h1>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

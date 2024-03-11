@@ -1,0 +1,18 @@
+{% extends "imageboard/base.html" %} 
+{% load thumbnail %} 
+
+{% block title %}Dubix{% endblock %} 
+
+{% block body %}
+
+
+<div class="board">
+    {% for post in posts %} 
+        {% thumbnail post.img "200x200" crop="center" as im %}
+            <a class="post-card" href="{% url 'imageboard:detail' post.id %}" style="background-image: url('{{im.url}}');">
+                <div class="post-title">{{ post.title }}</div>
+            </a>
+        {% endthumbnail %}
+    {% endfor %} 
+</div>
+{% endblock %}
