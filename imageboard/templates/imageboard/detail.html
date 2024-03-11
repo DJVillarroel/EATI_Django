@@ -12,10 +12,10 @@
         </div>
         <div class="content-comments">
             {% if request.user.is_authenticated %}
-                <form method="POST" action="{% url 'comment_submit_url' %}" enctype="multipart/form-data" class="comment-form">
+                <form method="POST" action="" enctype="multipart/form-data" class="comment-form">
                     <h1>Posteá un comentario</h1>
                     {% csrf_token %}
-                    {{form.as_p}}
+                    {{ form.as_p }}
                     <div>
                         <button type="submit" class="button">Postear</button>
                     </div>

@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Comment
 from .forms import PostCommentForm
 from django.views.generic import TemplateView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 class HomePageView(TemplateView):
     template_name = 'imageboard/index.html'
@@ -13,7 +15,7 @@ class HomePageView(TemplateView):
         context['posts'] = Post.objects.all().order_by('-id') 
         return context
     
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     template_name = 'imageboard/detail.html'
     model = Post
     context_object_name = 'post'
@@ -23,17 +25,18 @@ class PostDetailView(DetailView):
         post = self.get_object()
         comments = Comment.objects.filter(post=post)
         context['comments'] = comments
+        context['comment_form'] = PostCommentForm(post=post, author=self.request.user)
         return context
     
-def post_detail(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    comments = Comment.objects.filter(post=post)
-    form = PostCommentForm(request.POST or None)  # Corrected here
-    if request.method == 'POST':
+    def post(self, request, *args, **kwargs):
+        post = self.get_object()
+        form = PostCommentForm(post=post, author=request.user)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post
-            comment.author = request.user  
             comment.save()
-            return redirect('post_detail', post_id=post_id)  # Corrected here
-    return render(request, 'imageboard/detail.html', {'post': post, 'comments': comments, 'form': form})
+            return redirect('post-detail', pk=post.pk)
+        else:
+            context = self.get_context_data()
+            context['comment_form'] = form
+            return self.render_to_response(context)
