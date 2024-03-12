@@ -1,20 +1,14 @@
 from django import forms
-from .models import Comment
+from .models import Comment, Post
+from django.utils import timezone
 
-class PostCommentForm(forms.ModelForm):
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'text', 'img']
+
+class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
         
-    def __init__(self, post, author, *args, **kwargs):
-        self.post = post
-        self.author = author
-        super(PostCommentForm, self).__init__(*args, **kwargs)
-
-    def save(self, commit=True):
-        comment = super(PostCommentForm, self).save(commit=False)
-        comment.post = self.post
-        comment.author = self.author
-        if commit:
-            comment.save()
-        return comment

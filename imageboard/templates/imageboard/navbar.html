@@ -1,8 +1,14 @@
 <nav class="navbar">
   <div class="nav-content">
       <a class="nav-logo" href="/">DUBIX</a>
-      <div class="nav-user">
-          <a class="" href="/">login</a>
-      </div>
+      <ul class="nav-items">
+      {% if request.user.is_authenticated %}
+            <li><a href="{% url 'imageboard:create_post' %}">Postear</a></li>
+            <li>Bienvenido! {{ user.username }}</li>
+          {% else %}
+            <li><a class="" href="/">Registrarse</a></li>
+            <li><a class="" href="/">login</a></li>
+          {% endif %}
+        </ul>
   </div>
 </nav>

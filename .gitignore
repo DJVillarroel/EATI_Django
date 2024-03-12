@@ -130,6 +130,6 @@ dmypy.json
 
 media/
 thumbnails/
-static/
+#static/
 
 .DS_Store

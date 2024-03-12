@@ -1,0 +1,16 @@
+{% extends "imageboard/base.html" %}
+
+{% block title %}
+    Crear nuevo posteo
+{% endblock %}
+
+{% block body %}
+    <div class="new-post">
+        <h1>Crear nuevo posteo</h1>
+        <form method="POST" enctype="multipart/form-data" class="new-post-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input class="button" type="submit" value="Crear post">
+        </form>
+    </div>
+{% endblock %}
