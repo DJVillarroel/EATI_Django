@@ -1,0 +1,45 @@
+{% extends "imageboard/base.html" %}
+
+{% load allauth i18n %}
+
+{% block title %}Registrate{% endblock title %}
+
+{% block body %}
+  <div class="new-post">
+    <div class="account">
+      <span class=""><h1>Registro</h1></span>
+      <div class="">
+        <div class="">
+          <form method="post" class="account-form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div>
+              <label> Correo electrónico </label>
+              {{ form.email.errors }}
+              <input type="text" name="email" value="{{ form.email.value }}" placeholder="{% trans "Email" %}" class="">
+            </div>
+            <div> 
+              <label> Nombre de usuario </label>
+              {{ form.username.errors }}
+              <input type="text" name="username" value="{{ form.username.value }}" placeholder="{% trans "Username" %}" id="id_username" class="">
+            </div>
+            <div>
+              <label> Contraseña </label>
+              {{ form.password1.errors }}
+              <input type="password" name="password1" placeholder="{% trans "Password" %}" class="">
+            </div>
+            <div>
+              <label class=""> Confirmá contraseña</label>
+              {{ form.password2.errors }}
+              <input type="password" name="password2" placeholder="{% trans "Confirm Password" %}" class="">
+            </div>
+            <div class="">
+              <button type="submit" class="button">Registrarse</button>
+              <a href="{% url 'account_login' %}"> ¿Ya tenés una cuenta? Accedé a ella </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+    {% endblock body %}

@@ -11,5 +11,3 @@ urlpatterns = [
     path('createpost/', AddPostView.as_view(), name='create_post'),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

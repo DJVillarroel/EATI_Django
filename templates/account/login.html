@@ -1,0 +1,43 @@
+{% extends "imageboard/base.html" %}
+
+{% load allauth i18n %}
+
+{% block title %}Accedé a tu cuenta{% endblock title %}
+{% block body %}
+    <div class="new-post">
+        <div class="account">
+             <div>
+              <span><h1>Accedé a tu cuenta</h1></span>
+              <div>
+                <div>
+                  <form method="post" class="account-form">
+                    {% csrf_token %}
+                    <div>
+                        <label> Correo electrónico </label>
+                        <input type="text" name="login" placeholder="{% trans "Email" %}">
+                        {% if form.login.errors %}
+                            <p class="">{{ form.login.errors }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label> Contraseña </label>
+                        <input type="password" name="password" placeholder="{% trans "Password" %}" class="">
+                        {% if form.password.errors %}
+                        <p class="">{{ form.password.errors }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="">
+                      <button type="submit" class="button"> {% trans "Login" %} </button>
+                      <a href="{% url 'account_reset_password' %}" class=""> ¿Olvidaste la contraseña? </a>
+                    </div>
+                    {% if request.GET.error == '1' %}
+                    <p class="">contraseña o correo electrónico invalido, intentá nuevamente.</p>
+                    {% endif %}
+                  </form>
+                  <p class="">Si no tenés una cuenta, <a href="{% url 'account_signup' %}" class="">registrate acá</a>.</   p>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

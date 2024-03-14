@@ -1,10 +1,11 @@
-from typing import Any
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, get_object_or_404
 from .models import Post, Comment
 from .forms import CommentForm, PostForm
 from django.views.generic import TemplateView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
+
+
 
 
 class HomePageView(TemplateView):
@@ -26,18 +27,25 @@ class PostDetailView(LoginRequiredMixin, DetailView):
         post = self.get_object()
         comments = Comment.objects.filter(post=post).order_by('-id') 
         context['comments'] = comments
-        context['comment_form'] = CommentForm()  # Initialize an empty comment form
+        context['comment_form'] = CommentForm() 
         return context
     
     def post(self, request, *args, **kwargs):
         post = self.get_object()
         form = CommentForm(request.POST)
+        
+        if 'delete_comment_id' in request.POST:
+            comment_id = request.POST['delete_comment_id']
+            comment = get_object_or_404(Comment, pk=comment_id)
+            comment.delete()
+            # Redirect to the same post detail page after deleting the comment
+            return redirect(reverse('imageboard:detail', kwargs={'pk': post.pk}))
+        
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post
             comment.author = request.user
             comment.save()
-            # Redirect to the same post detail page after adding the comment
             return redirect(reverse('imageboard:detail', kwargs={'pk': post.pk}))
         else:
             # If form is invalid, re-render the page with errors
